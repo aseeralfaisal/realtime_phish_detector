@@ -1,1 +1,6 @@
 gymnasium
+pandas
+numpy
+scikit-learn
+joblib
+stable-baselines3
