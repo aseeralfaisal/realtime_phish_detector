@@ -4,15 +4,19 @@ from env import Environment
 from stable_baselines3 import DQN
 from stable_baselines3.common.env_checker import check_env
 
-def load_process_data(timesteps):
-    n_steps = timesteps // 2
-    data_frame = "./data_set/phiusiil.csv"
-    phishing = data_frame[data_frame["label"] == 1].sample(n=n_steps, random_state=42)
-    legitimate = data_frame[data_frame["label"] == 0].sample(n=n_steps, random_state=42)
+def load_process_data():
+    data_frame = pd.read_csv("./data_set/phiusiil.csv")
+    min_class_size = min(
+        data_frame[data_frame["label"] == 1].shape[0],
+        data_frame[data_frame["label"] == 0].shape[0]
+    )
+    phishing = data_frame[data_frame["label"] == 1].sample(n=min_class_size, random_state=42)
+    legitimate = data_frame[data_frame["label"] == 0].sample(n=min_class_size, random_state=42)
     
     balanced_data = pd.concat([phishing, legitimate]).sample(frac=1, random_state=42).reset_index(drop=True)
     process_data = Environment(balanced_data)
     return process_data
+
 
 def training_process(timesteps):
     env = load_process_data(timesteps)
