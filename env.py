@@ -32,7 +32,13 @@ class Environment(gym.Env):
     def reset(self, seed=None, options=None):
         if seed is not None:
             np.random.seed(seed)
-        self.current_state = np.random.randint(0, len(self.data))
+        
+        if np.random.rand() < 0.5:
+            indices = np.where(self.labels == 0)[0]
+        else:
+            indices = np.where(self.labels == 1)[0]
+            
+        self.current_state = np.random.choice(indices)
         return self.get_state(), {}
 
     def step(self, action):

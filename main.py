@@ -4,18 +4,22 @@ from env import Environment
 from stable_baselines3 import DQN
 from stable_baselines3.common.env_checker import check_env
 
-def load_process_data():
-    path = "./data_set/phiusiil.csv"
-    data_frame = pd.read_csv(path)
-    process_data = Environment(data_frame)
+def load_process_data(timesteps):
+    n_steps = timesteps // 2
+    data_frame = "./data_set/phiusiil.csv"
+    phishing = data_frame[data_frame["label"] == 1].sample(n=n_steps, random_state=42)
+    legitimate = data_frame[data_frame["label"] == 0].sample(n=n_steps, random_state=42)
+    
+    balanced_data = pd.concat([phishing, legitimate]).sample(frac=1, random_state=42).reset_index(drop=True)
+    process_data = Environment(balanced_data)
     return process_data
 
-def training_process():
-    env = load_process_data()
+def training_process(timesteps):
+    env = load_process_data(timesteps)
     check_env(env, warn=True)
     
     model = DQN("MlpPolicy", env, verbose=1, device="cpu", exploration_final_eps=0.05)
-    model.learn(total_timesteps=50000)
+    model.learn(total_timesteps=timesteps)
 
     total_rewards = 0
     correct_predictions = 0
@@ -70,4 +74,5 @@ def training_process():
     model.save("./models/dqn_model")
     
 if __name__ == "__main__":
-    training_process()
+    timesteps=50000
+    training_process(timesteps)
