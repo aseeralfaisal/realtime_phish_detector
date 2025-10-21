@@ -8,7 +8,7 @@ env = Environment(data)
 
 model = DQN.load("./models/dqn_model", env=env, device="cpu")
 
-index = 31
+index = 50
 obs = env.data.iloc[index].values.astype(np.float32)
 true_label = env.labels[index]
 

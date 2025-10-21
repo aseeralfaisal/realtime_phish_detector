@@ -4,3 +4,6 @@ numpy
 scikit-learn
 joblib
 stable-baselines3
+bs4
+requests
+tldextract
