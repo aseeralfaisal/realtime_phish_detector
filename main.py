@@ -19,7 +19,7 @@ def load_process_data():
 
 
 def training_process(timesteps):
-    env = load_process_data(timesteps)
+    env = load_process_data()
     check_env(env, warn=True)
     
     model = DQN("MlpPolicy", env, verbose=1, device="cpu", exploration_final_eps=0.05)
