@@ -3,12 +3,12 @@ import numpy as np
 from stable_baselines3 import DQN
 from env import Environment
 
-data = pd.read_csv("./data/openphish.csv")
+data = pd.read_csv("./data/url_content.csv")
 env = Environment(data)
 
 model = DQN.load("./models/dqn_model", env=env, device="cuda")
 
-index = 144
+index = 205666
 obs = env.data.iloc[index].values.astype(np.float32)
 true_label = env.labels[index]
 
