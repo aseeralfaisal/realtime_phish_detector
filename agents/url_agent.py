@@ -10,7 +10,6 @@ def load_process_data():
     process_data = Environment(df)
     return process_data
 
-
 def training_process(timesteps):
     env = load_process_data()
     check_env(env, warn=True)
@@ -67,9 +66,10 @@ def training_process(timesteps):
     print(f"False Positives: {false_positives}")
     print(f"False Negatives: {false_negatives}")
 
+    save_dir = "./models/dqn_model"
     os.makedirs("./models", exist_ok=True)
-    model.save("./models/dqn_model")
-    print("Model saved to ./models/dqn_model")
+    model.save(save_dir)
+    print(f"Model saved to {save_dir}")
     
 if __name__ == "__main__":
     training_process(timesteps=250_000)
