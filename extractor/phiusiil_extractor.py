@@ -881,8 +881,8 @@ def main():
     for c in boolish:
         if c in df.columns:
             df[c] = df[c].fillna(0).astype(int)
-    df.to_csv("data_set/extracted.csv", index=False, quoting=csv.QUOTE_MINIMAL)
-    print(f"Wrote {len(df)} rows to data_set/extracted.csv")
+    df.to_csv("data/extracted.csv", index=False, quoting=csv.QUOTE_MINIMAL)
+    print(f"Wrote {len(df)} rows to data/extracted.csv")
 
 
 if __name__ == "__main__":

@@ -5,7 +5,7 @@ from stable_baselines3 import DQN
 from stable_baselines3.common.env_checker import check_env
 
 def load_process_data():
-    df = pd.read_csv("./data_set/url_content.csv")
+    df = pd.read_csv("./data/url_content.csv")
     df.drop(columns=["FILENAME"], inplace=True)
     process_data = Environment(df)
     return process_data
@@ -15,7 +15,7 @@ def training_process(timesteps):
     check_env(env, warn=True)
     
     model = DQN("MlpPolicy", env, verbose=1, device="cuda", exploration_final_eps=0.05)
-    model.learn(total_timesteps=timesteps)
+    model.learn(total_timesteps=timesteps, progress_bar=True)
 
     total_rewards = 0
     correct_predictions = 0
@@ -41,8 +41,6 @@ def training_process(timesteps):
             false_negatives += 1
             
         total_steps += 1
-        
-        env.render()
         
         print(f"Action: {action} ({'Phishing' if action == 1 else 'Legitimate'})")
         print(f"True Label: {true_label} ({'Phishing' if true_label == 1 else 'Legitimate'})")
