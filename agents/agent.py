@@ -41,12 +41,15 @@ def load_process_data(mode="url"):
     df.drop(columns=["FILENAME"], inplace=True) if mode == "url" else None
     
     print(f"Loaded dataset: {csv_path}\n")
-    time.sleep(2)
+    time.sleep(1)
     
     process_data = PhishEnv(df, mode)  
     return process_data
 
 def training_process(timesteps, type):
+    print(f"training type: {type}\n")
+    time.sleep(1)
+    
     env = load_process_data(mode=type)
     check_env(env, warn=True)
     
