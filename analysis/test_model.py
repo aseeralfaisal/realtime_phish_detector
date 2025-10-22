@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from stable_baselines3 import DQN
-from env import PhishEnv
+from src.phishing_env import PhishEnv
 
 data = pd.read_csv("./data/dom_content.csv")
 env = PhishEnv(data)

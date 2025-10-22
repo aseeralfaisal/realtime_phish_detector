@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from stable_baselines3 import DQN
-from env import PhishEnv
+from src.phishing_env import PhishEnv
 from sklearn.metrics import accuracy_score
 
 train_data = pd.read_csv("./data/phiusiil.csv")

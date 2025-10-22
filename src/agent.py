@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from env import PhishEnv
+from src.phishing_env import PhishEnv
 from stable_baselines3 import DQN
 from stable_baselines3.common.env_checker import check_env
 import time
