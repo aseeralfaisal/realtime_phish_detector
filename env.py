@@ -62,15 +62,3 @@ class Environment(gym.Env):
         }
 
         return next_state, reward, terminated, truncated, info
-
-    def render(self, mode="human"):
-        if mode == "human":
-            if self.current_state < len(self.data):
-                state = self.get_state()
-                label = self.labels[self.current_state]
-                print("\n=== Environment State ===")
-                print(f"Step: {self.current_state + 1}/{len(self.data)}")
-                print(f"Values: {state}")
-                print(f"True Label: {label} ({'Phishing' if label == 1 else 'Legitimate'})")
-            else:
-                print("\n[!] End of data. No more states to render.\n")
