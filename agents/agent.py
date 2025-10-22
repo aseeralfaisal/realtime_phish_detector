@@ -1,20 +1,56 @@
 import os
 import pandas as pd
-from env import Environment
+from env import PhishEnv
 from stable_baselines3 import DQN
 from stable_baselines3.common.env_checker import check_env
+import time
 
-def load_process_data():
-    df = pd.read_csv("./data/url_content.csv")
-    df.drop(columns=["FILENAME"], inplace=True)
-    process_data = Environment(df)
+def make_dqn_model(env, dataset_size, device="cuda"):
+    if dataset_size > 100_000: 
+        return DQN(
+            "MlpPolicy", env, verbose=1, device=device,
+            learning_rate=1e-4, buffer_size=120_000,
+            learning_starts=5000, batch_size=512,
+            train_freq=4, gradient_steps=4,
+            exploration_initial_eps=1.0,
+            exploration_fraction=0.15,
+            exploration_final_eps=0.05,
+            target_update_interval=1000,
+        )
+    else:  
+        return DQN(
+            "MlpPolicy", env, verbose=1, device=device,
+            learning_rate=3e-4, buffer_size=20_000,
+            learning_starts=1000, batch_size=128,
+            train_freq=2, gradient_steps=2,
+            exploration_initial_eps=1.0,
+            exploration_fraction=0.05,
+            exploration_final_eps=0.2,
+            target_update_interval=500,
+        )
+
+def load_process_data(mode="url"):
+    if mode == "url":
+        csv_path = "./data/url_content.csv"
+    elif mode == "html":
+        csv_path = "./data/html_content.csv"
+    elif mode == "dom":
+        csv_path = "./data/dom_content.csv"
+    
+    df = pd.read_csv(csv_path)
+    df.drop(columns=["FILENAME"], inplace=True) if mode == "url" else None
+    
+    print(f"Loaded dataset: {csv_path}\n")
+    time.sleep(2)
+    
+    process_data = PhishEnv(df, mode)  
     return process_data
 
-def training_process(timesteps):
-    env = load_process_data()
+def training_process(timesteps, type):
+    env = load_process_data(mode=type)
     check_env(env, warn=True)
     
-    model = DQN("MlpPolicy", env, verbose=1, device="cuda", exploration_final_eps=0.05)
+    model = make_dqn_model(env, dataset_size=len(env.data))
     model.learn(total_timesteps=timesteps, progress_bar=True)
 
     total_rewards = 0
@@ -64,10 +100,18 @@ def training_process(timesteps):
     print(f"False Positives: {false_positives}")
     print(f"False Negatives: {false_negatives}")
 
-    save_dir = "./models/dqn_model"
+    if type == "url":
+        save_dir = "./models/url_dqn_model"
+    elif type == "html":
+        save_dir = "./models/html_dqn_model"
+    elif type == "dom":
+        save_dir = "./models/dom_dqn_model"
+        
     os.makedirs("./models", exist_ok=True)
     model.save(save_dir)
-    print(f"Model saved to {save_dir}")
+    print(f"Trained Model Saved to {save_dir}")
     
 if __name__ == "__main__":
-    training_process(timesteps=250_000)
+    type = "url"
+    steps = 250_000
+    training_process(timesteps=steps, type=type)

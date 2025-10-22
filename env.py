@@ -1,16 +1,19 @@
 import gymnasium as gym
 import numpy as np
 
-
-class Environment(gym.Env):
-    def __init__(self, data):
-        super(Environment, self).__init__()
+class PhishEnv(gym.Env):
+    def __init__(self, data, mode="url"):
+        super(PhishEnv, self).__init__()
         
+        self.mode = mode
         self.labels = data["label"].values.astype(np.int64)
         self.data = data.drop(columns=["label"])
-        self.int_columns = self.data.select_dtypes(include=[np.integer]).columns
+        if self.mode == "url":
+            self.int_columns = self.data.select_dtypes(include=[np.integer]).columns
+        else:
+            self.int_columns = self.data.select_dtypes(include=[np.integer, np.float64]).columns
+                
         self.data = self.data[self.int_columns]
-        
         self.feature_max = self.data.max()
         self.feature_min = self.data.min()
         self.data = ((self.data - self.feature_min) / (self.feature_max - self.feature_min)).astype(np.float32)

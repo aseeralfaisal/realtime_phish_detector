@@ -1,14 +1,14 @@
 import pandas as pd
 import numpy as np
 from stable_baselines3 import DQN
-from env import Environment
+from env import PhishEnv
 from sklearn.metrics import accuracy_score
 
 train_data = pd.read_csv("./data/phiusiil.csv")
-train_env = Environment(train_data)
+train_env = PhishEnv(train_data)
 
 test_data = pd.read_csv("data/openphish.csv")  
-test_env = Environment(test_data)
+test_env = PhishEnv(test_data)
 
 model = DQN.load("./models/dqn_model", env=train_env, device="cuda")
 

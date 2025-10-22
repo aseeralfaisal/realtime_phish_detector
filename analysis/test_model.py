@@ -1,14 +1,14 @@
 import pandas as pd
 import numpy as np
 from stable_baselines3 import DQN
-from env import Environment
+from env import PhishEnv
 
-data = pd.read_csv("./data/url_content.csv")
-env = Environment(data)
+data = pd.read_csv("./data/dom_content.csv")
+env = PhishEnv(data)
 
-model = DQN.load("./models/dqn_model", env=env, device="cuda")
+model = DQN.load("./models/dom_dqn_model", env=env, device="cuda")
 
-index = 205666
+index = 15_000
 obs = env.data.iloc[index].values.astype(np.float32)
 true_label = env.labels[index]
 
