@@ -19,9 +19,9 @@ A reinforcement learning-based system for real-time phishing detection using Dee
    ```
 
 ## Usage
-- Train the model: `python src/agent.py --mode <mode>`
+- Train the model: `python -m src.agent --mode <mode>`
   - Replace `<mode>` with one of the following options: `dom`, `html`, or `url`.
-  - Example: `python src/agent.py --mode url`
+  - Example: `python -m src.agent --mode url`
 - Evaluate the model: `python analysis/evaluate_model.py`
 - Test the model: `python analysis/test_model.py`
 - Extract features: `python extractor/phiusiil_extractor.py`
