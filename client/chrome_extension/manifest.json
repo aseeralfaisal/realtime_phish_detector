@@ -1,11 +1,18 @@
 {
-    "name": "Phish Detector",
-    "version": "1.0.0",
-    "description": "",
     "manifest_version": 3,
-    "author": "A2Fais",
-    "action":{
+    "name": "Phishing Detector",
+    "version": "1.0",
+    "description": "Detects phishing attempts on websites.",
+    "icons": {
+        "16": "icon.png",
+        "48": "icon.png",
+        "128": "icon.png"
+    },
+    "action": {
         "default_popup": "index.html",
-        "default_title": ""
-    }
+        "default_icon": "icon.png"
+    },
+    "permissions": [
+        "activeTab"
+    ]
 }
