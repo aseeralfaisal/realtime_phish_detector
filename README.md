@@ -1,5 +1,3 @@
-# RL Realtime Phish Detection
-
 A reinforcement learning-based system for real-time phishing detection using Deep Q-Networks (DQN).
 
 ## Features
