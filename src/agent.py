@@ -3,9 +3,10 @@ import pandas as pd
 from src.phishing_env import PhishEnv
 from stable_baselines3.common.env_checker import check_env
 import time
+import argparse
 from src.model import make_dqn_model
 
-def load_process_data(mode="url"):
+def load_process_data(mode):
     csv_path = f"./data/{mode}_content.csv"
     df = pd.read_csv(csv_path)
     df.drop(columns=["FILENAME"], inplace=True) if mode == "url" else None
@@ -16,11 +17,11 @@ def load_process_data(mode="url"):
     process_data = PhishEnv(df, mode)  
     return process_data
 
-def training_process(timesteps, type):
-    print(f"Training Mode: {type}\n")
+def training_process(timesteps, mode):
+    print(f"Training Mode: {mode}\n")
     time.sleep(1)
     
-    env = load_process_data(mode=type)
+    env = load_process_data(mode=mode)
     check_env(env, warn=True)
     
     model = make_dqn_model(env, dataset_size=len(env.data))
@@ -73,13 +74,15 @@ def training_process(timesteps, type):
     print(f"False Positives: {false_positives}")
     print(f"False Negatives: {false_negatives}")
 
-    save_dir = f"./models/{type}_dqn_model"
+    save_dir = f"./models/{mode}_dqn_model"
         
     os.makedirs("./models", exist_ok=True)
     model.save(save_dir)
     print(f"Trained Model Saved to {save_dir}")
     
 if __name__ == "__main__":
-    type = "html"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--mode", type=str, choices=["dom", "html", "url"], required=True, help="Choose training mode: dom, html, or url")
+    args = parser.parse_args()
     steps = {"dom": 30_000, "html": 40_000, "url": 250_000}
-    training_process(timesteps=steps[type], type=type)
+    training_process(timesteps=steps[type], mode=args.mode)
