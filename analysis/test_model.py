@@ -2,19 +2,37 @@ import pandas as pd
 import numpy as np
 from stable_baselines3 import DQN
 from src.phishing_env import PhishEnv
+import argparse
 
-data = pd.read_csv("./data/dom_content.csv")
-env = PhishEnv(data)
+args = argparse.ArgumentParser()
+args.add_argument("--mode", type=str, choices=["url", "html", "dom"], help="Choose the model type to test", required=True)
+args = args.parse_args()
+mode = args.mode
 
-model = DQN.load("./models/dom_dqn_model", env=env, device="cuda")
+data = pd.read_csv(f"./data/{mode}_content.csv")
+env = PhishEnv(data, mode=mode)
+model = DQN.load(f"./trained_models/{mode}_dqn_model.zip", env=env, device="cpu")
 
-index = 15_000
-obs = env.data.iloc[index].values.astype(np.float32)
-true_label = env.labels[index]
+results = []
+range_len = range(len(env.data))
 
-action, _ = model.predict(obs, deterministic=True)
+correct = 0
+for idx in range_len:
+    if mode == "url":
+        obs = env.data.iloc[idx].values.astype(np.int64)
+    else:
+        obs = env.data.iloc[idx].values.astype(np.float32)
+    
+    true_label = env.labels[idx]
+    action, _ = model.predict(obs, deterministic=True)
+    correct += 1 if action == true_label else 0
 
-print(f"Feature Vector (normalized):\n{obs}")
-print(f"\nPredicted Action: {action} ({'Phishing' if action == 0 else 'Legitimate'})")
-print(f"True Label: {true_label} ({'Phishing' if true_label == 0 else 'Legitimate'})")
-print("\n===============================")
+    results.append({
+        "Index": idx,
+        "Predicted Action": action,
+        "True Label": true_label,
+    })
+
+df_results = pd.DataFrame(results)
+print(f"{df_results}\n")
+print(f"Correct Predictions: {correct} / {len(results)}")

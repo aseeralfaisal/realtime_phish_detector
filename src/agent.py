@@ -67,9 +67,8 @@ def training_process(timesteps, mode):
     print(f"False Positives: {false_positives}")
     print(f"False Negatives: {false_negatives}")
 
-    save_dir = f"./models/{mode}_dqn_model"
-        
-    os.makedirs("./models", exist_ok=True)
+    save_dir = f"./trained_models/{mode}_dqn_model"
+    os.makedirs("./trained_models", exist_ok=True)
     model.save(save_dir)
     print(f"Trained Model Saved to {save_dir}")
     

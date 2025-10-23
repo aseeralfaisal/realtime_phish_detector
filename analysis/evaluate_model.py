@@ -10,7 +10,7 @@ train_env = PhishEnv(train_data)
 test_data = pd.read_csv("data/openphish.csv")  
 test_env = PhishEnv(test_data)
 
-model = DQN.load("./models/dqn_model", env=train_env, device="cuda")
+model = DQN.load("./trained_models/dqn_model", env=train_env, device="cuda")
 
 def evaluate_model(env, data, model):
     int_columns = env.int_columns
