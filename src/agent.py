@@ -45,27 +45,6 @@ def training_process(timesteps, mode):
             false_negatives += 1
             
         total_steps += 1
-        
-        print(f"Action: {action} ({'Phishing' if action == 1 else 'Legitimate'})")
-        print(f"True Label: {true_label} ({'Phishing' if true_label == 1 else 'Legitimate'})")
-        print(f"Reward: {reward}")
-        print(f"Current Accuracy: {correct_predictions / total_steps * 100:.2f}%")
-        print(f"False Positive Rate: {false_positives / total_steps * 100:.2f}%")
-        print(f"False Negative Rate: {false_negatives / total_steps * 100:.2f}%")
-
-    accuracy = correct_predictions / total_steps * 100
-    false_positive_rate = false_positives / total_steps * 100
-    false_negative_rate = false_negatives / total_steps * 100
-    
-    print("\nFinal Evaluation Metrics:")
-    print(f"Total Episodes: {total_steps}")
-    print(f"Total Reward: {total_rewards}")
-    print(f"Accuracy: {accuracy:.2f}%")
-    print(f"False Positive Rate: {false_positive_rate:.2f}%")
-    print(f"False Negative Rate: {false_negative_rate:.2f}%")
-    print(f"True Positives: {correct_predictions}")
-    print(f"False Positives: {false_positives}")
-    print(f"False Negatives: {false_negatives}")
 
     save_dir = f"./trained_models/{mode}_dqn_model"
     os.makedirs("./trained_models", exist_ok=True)
