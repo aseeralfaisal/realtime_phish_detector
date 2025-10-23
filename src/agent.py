@@ -76,5 +76,5 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", type=str, choices=["dom", "html", "url"], required=True, help="Choose training mode: dom, html, or url")
     args = parser.parse_args()
-    steps = {"dom": 30_000, "html": 40_000, "url": 250_000}
+    steps = {"dom": 120_000, "html": 150_000, "url": 250_000}
     training_process(timesteps=steps[args.mode], mode=args.mode)
