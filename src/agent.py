@@ -11,15 +11,15 @@ def load_process_data(mode):
     df = pd.read_csv(csv_path)
     df.drop(columns=["FILENAME"], inplace=True) if mode == "url" else None
     
-    print(f"Loaded Data: {csv_path}\n")
-    time.sleep(1)
+    print(f"Loaded Data: {csv_path.capitalize()}")
+    time.sleep(0.5)
     
     process_data = PhishEnv(df, mode)  
     return process_data
 
 def training_process(timesteps, mode):
-    print(f"Training Mode: {mode}\n")
-    time.sleep(1)
+    print(f"Training Mode: {mode.capitalize()}\n")
+    time.sleep(0.5)
     
     env = load_process_data(mode=mode)
     check_env(env, warn=True)

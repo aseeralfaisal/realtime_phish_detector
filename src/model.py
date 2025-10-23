@@ -1,6 +1,6 @@
 from stable_baselines3 import DQN
 
-def make_dqn_model(env, dataset_size, device="cuda"):
+def make_dqn_model(env, dataset_size, device="cpu"):
     if dataset_size > 100_000: 
         return DQN(
             "MlpPolicy", env, verbose=1, device=device,
