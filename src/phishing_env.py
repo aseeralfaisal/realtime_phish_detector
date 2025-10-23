@@ -50,7 +50,12 @@ class PhishEnv(gym.Env):
         if action == true_label:
             reward = 1
         else:
-            reward = -2 if true_label == 1 else -0.5  
+            if self.mode == "dom":
+                reward = -1 if true_label == 1 else -0.2  
+            elif self.mode == "html":
+                reward = -1.5 if true_label == 1 else -0.3  
+            elif self.mode == "url":
+                reward = -2 if true_label == 1 else -0.5  
 
         terminated = True
         truncated = False
