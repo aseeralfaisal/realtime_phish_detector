@@ -8,10 +8,7 @@ class PhishEnv(gym.Env):
         self.mode = mode
         self.labels = data["label"].values.astype(np.int64)
         self.data = data.drop(columns=["label"])
-        if self.mode == "url":
-            self.int_columns = self.data.select_dtypes(include=[np.integer]).columns
-        else:
-            self.int_columns = self.data.select_dtypes(include=[np.integer, np.float64]).columns
+        self.int_columns = self.data.select_dtypes(include=[np.number]).columns
                 
         self.data = self.data[self.int_columns]
         self.feature_max = self.data.max()
@@ -48,14 +45,9 @@ class PhishEnv(gym.Env):
         true_label = self.labels[self.current_state]
 
         if action == true_label:
-            reward = 1
+            reward = 1.0
         else:
-            if self.mode == "dom":
-                reward = -1 if true_label == 1 else -0.2  
-            elif self.mode == "html":
-                reward = -1.5 if true_label == 1 else -0.3  
-            elif self.mode == "url":
-                reward = -2 if true_label == 1 else -0.5  
+            reward = -0.8 if true_label == 1 else -0.5
 
         terminated = True
         truncated = False
