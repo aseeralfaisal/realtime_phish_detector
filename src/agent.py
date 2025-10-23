@@ -2,7 +2,6 @@ import os
 import pandas as pd
 from src.phishing_env import PhishEnv
 from stable_baselines3.common.env_checker import check_env
-import time
 import argparse
 from src.model import make_dqn_model
 
@@ -10,18 +9,13 @@ def load_process_data(mode):
     csv_path = f"./data/{mode}_content.csv"
     df = pd.read_csv(csv_path)
     df.drop(columns=["FILENAME"], inplace=True) if mode == "url" else None
-    
-    print(f"Loaded Data: {csv_path.capitalize()}")
-    time.sleep(0.5)
-    
+    print(f"Loaded Data: {csv_path}")
     process_data = PhishEnv(df, mode)  
     return process_data
 
 def training_process(timesteps, mode):
-    print(f"Training Mode: {mode.capitalize()}\n")
-    time.sleep(0.5)
-    
     env = load_process_data(mode=mode)
+    print(f"Training Mode: {mode}\n")
     check_env(env, warn=True)
     
     model = make_dqn_model(env, dataset_size=len(env.data))
@@ -58,7 +52,6 @@ def training_process(timesteps, mode):
         print(f"Current Accuracy: {correct_predictions / total_steps * 100:.2f}%")
         print(f"False Positive Rate: {false_positives / total_steps * 100:.2f}%")
         print(f"False Negative Rate: {false_negatives / total_steps * 100:.2f}%")
-        print("\n=====================================")
 
     accuracy = correct_predictions / total_steps * 100
     false_positive_rate = false_positives / total_steps * 100
