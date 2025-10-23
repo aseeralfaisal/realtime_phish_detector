@@ -2,7 +2,7 @@
     "name": "Phish Detector",
     "version": "1.0.0",
     "description": "",
-    "manifest_version": 1,
+    "manifest_version": 3,
     "author": "A2Fais",
     "action":{
         "default_popup": "index.html",
