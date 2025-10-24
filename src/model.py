@@ -1,7 +1,7 @@
 from stable_baselines3 import DQN
 import torch
 
-def make_dqn_model(env, dataset_size, device="cpu"):
+def make_dqn_model(env, dataset_size, device="cpu", verbose=0):
     policy_kwargs = dict(
         net_arch=[256, 256, 128],
         activation_fn=torch.nn.ReLU
@@ -36,4 +36,4 @@ def make_dqn_model(env, dataset_size, device="cpu"):
             "policy_kwargs": policy_kwargs,
         }
 
-    return DQN("MlpPolicy", env, verbose=1, device=device, **hyperparams)
+    return DQN("MlpPolicy", env, verbose=verbose, device=device, **hyperparams)

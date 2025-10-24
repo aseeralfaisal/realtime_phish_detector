@@ -13,12 +13,12 @@ def load_process_data(mode):
     process_data = PhishEnv(df, mode)  
     return process_data
 
-def training_process(timesteps, mode):
+def training_process(timesteps, mode, verbose):
     env = load_process_data(mode=mode)
     print(f"Training Mode: {mode}\n")
     check_env(env, warn=True)
     
-    model = make_dqn_model(env, dataset_size=len(env.data))
+    model = make_dqn_model(env, dataset_size=len(env.data), verbose=verbose)
     model.learn(total_timesteps=timesteps, progress_bar=True)
 
     total_rewards = 0
@@ -26,14 +26,12 @@ def training_process(timesteps, mode):
     false_positives = 0
     false_negatives = 0
     total_steps = 0
-
     obs, _ = env.reset()
     terminated = truncated = False
     
     while not (terminated or truncated):
         action, _ = model.predict(obs)
         obs, reward, terminated, truncated, info = env.step(action)
-        
         total_rewards += reward
         true_label = info["true_label"]
         
@@ -54,6 +52,10 @@ def training_process(timesteps, mode):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", type=str, choices=["dom", "html", "url"], required=True, help="Choose training mode: dom, html, or url")
+    parser.add_argument("--verbose", type=int, choices=[0, 1], default=0, required=False, help="Choose verbosity level [0, 1]")
     args = parser.parse_args()
+    mode = args.mode
+    verbose = args.verbose
+    
     steps = {"dom": 120_000, "html": 150_000, "url": 250_000}
-    training_process(timesteps=steps[args.mode], mode=args.mode)
+    training_process(timesteps=steps[mode], mode=mode, verbose=verbose)
