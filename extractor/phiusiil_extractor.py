@@ -1,22 +1,3 @@
-"""
-PhiUSIIL-compatible feature extractor
--------------------------------------
-Outputs a CSV with EXACTLY the same 56 columns as the PhiUSIIL dataset.
-
-Usage:
-  python phiusiil_extractor.py --input urls.txt --output phiusiil_features.csv
-  # Or with a CSV that has a column named URL:
-  python phiusiil_extractor.py --input urls.csv --output phiusiil_features.csv
-
-Optional priors:
-  --tld-probs tld_probs.csv        # CSV with columns: TLD,prob
-  --char-probs char_probs.txt      # Plain text where each line is "char ru0020 <prob>" or "char,prob"
-
-Notes:
-- Implements heuristic approximations for some web-derived features (e.g., responsiveness, robots).
-- All 56 columns are present and named exactly like the public dataset.
-"""
-
 import argparse
 import csv
 import hashlib
@@ -55,7 +36,6 @@ SOCIAL_DOMAINS = {
     "weibo.com",
     "vk.com",
 }
-
 
 def sha1_hex(s: str) -> str:
     return hashlib.sha1(s.encode("utf-8")).hexdigest()
@@ -316,11 +296,6 @@ def obfuscation_metrics(url: str) -> Tuple[int, int, float]:
     has = 1 if count > 0 else 0
     ratio = count / max(1, len(url))
     return has, count, ratio
-
-
-# ---------------------
-# Core extraction
-# ---------------------
 
 ALL_COLUMNS = [
     "FILENAME",
