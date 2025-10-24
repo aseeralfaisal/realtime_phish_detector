@@ -298,5 +298,7 @@ urls = [
     "https://2fasecurity.icu/",
     "https://neheta.github.io/Netflix-Clone/",
     "https://cqfzz.cn/xzswa",
-    "http://owxzaoppcq.duckdns.org/en/"
+    "http://owxzaoppcq.duckdns.org/en/",
+    "https://www.google.com/",
+    "https://pytorch.org/"
 ]

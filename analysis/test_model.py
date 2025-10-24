@@ -19,11 +19,11 @@ env = PhishEnv(df, mode=mode)
 model = DQN.load(f"./trained_models/{mode}_dqn_model.zip", env=env, device="cpu")
 
 results = []
-range_len = range(len(env.data))
+range_len = range(len(env.data)) #if test_type == "external" else range(0,30)
 
 correct = 0
 for idx in range_len:
-    obs = env.data.iloc[idx].values.astype(np.number)
+    obs = env.data.iloc[idx].values.astype(np.float32)
     true_label = env.labels[idx]
     action, _ = model.predict(obs, deterministic=True)
     correct += 1 if action == true_label else 0

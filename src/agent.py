@@ -13,12 +13,12 @@ def load_process_data(mode):
     process_data = PhishEnv(df, mode)  
     return process_data
 
-def training_process(timesteps, mode, verbose):
+def training_process(timesteps, mode, verbose, device):
     env = load_process_data(mode=mode)
     print(f"Training Mode: {mode}\n")
     check_env(env, warn=True)
     
-    model = make_dqn_model(env, dataset_size=len(env.data), verbose=verbose)
+    model = make_dqn_model(env, dataset_size=len(env.data), verbose=verbose, device=device)
     model.learn(total_timesteps=timesteps, progress_bar=True)
 
     total_rewards = 0
@@ -58,4 +58,4 @@ if __name__ == "__main__":
     verbose = args.verbose
     
     steps = {"dom": 120_000, "html": 150_000, "url": 250_000}
-    training_process(timesteps=steps[mode], mode=mode, verbose=verbose)
+    training_process(timesteps=steps[mode], mode=mode, verbose=verbose, device="cuda")
