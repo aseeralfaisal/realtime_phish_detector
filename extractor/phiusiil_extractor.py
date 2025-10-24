@@ -139,7 +139,7 @@ def safe_host(url: str) -> Tuple[str, str, str, str]:
     u = urlparse(url)
     ext = tldextract.extract(url)
     tld = (ext.suffix or "").lower()
-    domain = ext.registered_domain or (u.netloc or "")
+    domain = ext.top_domain_under_public_suffix or (u.netloc or "")
     subdomain = ext.subdomain or ""
     return u.netloc or "", domain, subdomain, tld
 
@@ -521,13 +521,14 @@ def main():
 
 
     rows = []
-    for u in urls:
+    for url in urls:
         try:
-            rows.append(extract_for_url(u, tld_probs, char_probs, args.sleep))
+            rows.append(extract_for_url(url, tld_probs, char_probs, args.sleep))
+            print(f"Extracting features from -> {url}")
         except Exception as e:
             r = {c: None for c in ALL_COLUMNS}
-            r["URL"] = u
-            r["FILENAME"] = sha1_hex(u) + ".html"
+            r["URL"] = url
+            r["FILENAME"] = sha1_hex(url) + ".html"
             r["label"] = ""
             rows.append(r)
             continue
