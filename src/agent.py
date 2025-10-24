@@ -52,7 +52,7 @@ def training_process(timesteps, mode, verbose):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", type=str, choices=["dom", "html", "url"], required=True, help="Choose training mode: dom, html, or url")
-    parser.add_argument("--verbose", type=int, choices=[0, 1], default=0, required=False, help="Choose verbosity level [0, 1]")
+    parser.add_argument("--verbose", action="store_const", const=1, default=0, help="Enable verbosity for each step")
     args = parser.parse_args()
     mode = args.mode
     verbose = args.verbose
