@@ -20,7 +20,7 @@ model = DQN.load(f"./trained_models/{mode}_dqn_model.zip", env=env, device="cpu"
 
 results = []
 len_data = len(env.data)
-range_len = range(50, 100) #if test_type == "external" else range(0,30)
+range_len = range(len_data)
 
 correct = 0
 for idx in range_len:
