@@ -19,7 +19,8 @@ env = PhishEnv(df, mode=mode)
 model = DQN.load(f"./trained_models/{mode}_dqn_model.zip", env=env, device="cpu")
 
 results = []
-range_len = range(len(env.data)) #if test_type == "external" else range(0,30)
+len_data = len(env.data)
+range_len = range(50, 100) #if test_type == "external" else range(0,30)
 
 correct = 0
 for idx in range_len:
