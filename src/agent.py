@@ -57,5 +57,5 @@ if __name__ == "__main__":
     mode = args.mode
     verbose = args.verbose
     
-    steps = {"dom": 120_000, "html": 150_000, "url": 250_000}
+    steps = {"dom": 120_000, "html": 150_000, "url": 300_000}
     training_process(timesteps=steps[mode], mode=mode, verbose=verbose, device="cuda")

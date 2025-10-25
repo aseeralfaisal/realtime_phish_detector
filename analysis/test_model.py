@@ -16,7 +16,7 @@ csv_path = f"./data/{mode}_content.csv" if test_type == "internal" else f"./data
 
 df = pd.read_csv(csv_path)
 env = PhishEnv(df, mode=mode)
-model = DQN.load(f"./trained_models/{mode}_dqn_model.zip", env=env, device="cpu")
+model = DQN.load(f"./trained_models/{mode}_dqn_model.zip", env=env, device="cuda")
 
 results = []
 len_data = len(env.data)

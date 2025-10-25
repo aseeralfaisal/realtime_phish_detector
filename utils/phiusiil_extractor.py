@@ -467,7 +467,7 @@ def extract_for_url(
     row["HasCopyrightInfo"] = copyright_flag(text)
 
     # label unknown for fresh URLs
-    row["label"] = ""
+    row["label"] = "1"
 
     if sleep_sec > 0:
         time.sleep(sleep_sec)
