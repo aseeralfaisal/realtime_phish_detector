@@ -7,7 +7,7 @@ class PhishEnv(gym.Env):
         
         self.mode = mode
         self.labels = data["label"].values.astype(np.int32)
-        self.data = data.drop(columns=["label"])
+        self.data = data.drop(columns=["label", "DegitRatioInURL"])
         
         if mode == "url":
             self.int_columns = self.data.select_dtypes(include=[np.integer]).columns

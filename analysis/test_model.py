@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser()
 mode = args.mode 
 test_type = args.test_type
 
-csv_path = f"./data/{mode}_content.csv" if test_type == "internal" else f"./data/extracted.csv"
+csv_path = f"data/{mode}_content.csv" if test_type == "internal" else f"data/extracted.csv"
 
 df = pd.read_csv(csv_path)
 env = PhishEnv(df, mode=mode)
