@@ -494,10 +494,10 @@ def main():
 
 
     rows = []
-    for url in urls:
+    for idx, url in enumerate(urls):
         try:
             rows.append(extract_for_url(url, tld_probs, char_probs, args.sleep))
-            print(f"Extracting features from -> {url}")
+            print(f"{idx+1}/{len(urls)} -> {url}")
         except Exception as e:
             r = {c: None for c in ALL_COLUMNS}
             r["URL"] = url
