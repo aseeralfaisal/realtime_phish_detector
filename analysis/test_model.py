@@ -31,7 +31,7 @@ for idx in range_len:
     obs = env.get_state_for_testing(idx) 
     obs = obs[None, :] 
     true_label = env.labels[idx]
-    action, _ = model.predict(obs, deterministic=True, training=False) 
+    action, _ = model.predict(obs, deterministic=True) 
     
     action_scalar = action.item() 
     correct += 1 if action_scalar == true_label else 0

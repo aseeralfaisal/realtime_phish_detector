@@ -2002,5 +2002,8 @@
 # ]
 
 urls = [
-    "https://www.google.com"
+    "https://www.google.com",
+    "https://io-trezorrstart-us.pages.dev",
+    "https://acceilfiltres.wixsite.com/my-site",
+    "https://aeon.jfdjge.com/syOzBZ"
 ]
