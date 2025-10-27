@@ -9,3 +9,4 @@ requests
 tldextract
 torch
 tqdm
+transformers

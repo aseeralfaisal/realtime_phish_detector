@@ -4,6 +4,8 @@ from stable_baselines3 import DQN
 from src.phishing_env import PhishEnv
 import argparse
 
+BERT_DIM = 768
+
 args = argparse.ArgumentParser()
 args.add_argument("--mode", type=str, choices=["url", "html", "dom"], help="Choose url or html", required=True)
 args.add_argument("--test-type", type=str, choices=["external", "internal"], help="Choose external or internal", required=True)
@@ -24,14 +26,19 @@ range_len = range(len_data)
 
 correct = 0
 for idx in range_len:
-    obs = env.data.iloc[idx].values.astype(np.float32)
+    url = df["URL"].values[idx]
+    print(f"{idx} -> {url}")
+    obs = env.get_state_for_testing(idx) 
+    obs = obs[None, :] 
     true_label = env.labels[idx]
-    action, _ = model.predict(obs, deterministic=True)
-    correct += 1 if action == true_label else 0
+    action, _ = model.predict(obs, deterministic=True, training=False) 
+    
+    action_scalar = action.item() 
+    correct += 1 if action_scalar == true_label else 0
 
     results.append({
         "Index": idx,
-        "Predicted Action": action,
+        "Predicted Action": action_scalar,
         "True Label": true_label,
     })
 

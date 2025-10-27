@@ -1,5 +1,8 @@
 import gymnasium as gym
 import numpy as np
+from src.bert import get_bert_embedding
+
+BERT_DIM = 768
 
 class PhishEnv(gym.Env):
     def __init__(self, data, mode="url"):
@@ -7,7 +10,16 @@ class PhishEnv(gym.Env):
         
         self.mode = mode
         self.labels = data["label"].values.astype(np.int32)
-        self.data = data.drop(columns=["label", "DegitRatioInURL"])
+        
+        text_col_name = "URL" 
+
+        if text_col_name not in data.columns:
+            raise ValueError(f"Required column '{text_col_name}' not found in input data.")
+            
+        self.raw_text_data = data[text_col_name].values
+        
+        columns_to_drop = ["label", "DegitRatioInURL", text_col_name]
+        self.data = data.drop(columns=columns_to_drop, errors='ignore')
         
         if mode == "url":
             self.int_columns = self.data.select_dtypes(include=[np.integer]).columns
@@ -15,22 +27,35 @@ class PhishEnv(gym.Env):
             self.int_columns = self.data.select_dtypes(include=[np.number]).columns
             
         self.data = self.data[self.int_columns]
+        
+        self.n_numerical_features = len(self.int_columns)
+        self.TOTAL_OBS_DIM = self.n_numerical_features + BERT_DIM
+        
         self.feature_max = self.data.max()
         self.feature_min = self.data.min()
-        self.data = ((self.data - self.feature_min) / (self.feature_max - self.feature_min)).astype(np.float32)
+        self.data = ((self.data - self.feature_min) / (self.feature_max - self.feature_min)).fillna(0).astype(np.float32)
         self.n_features = len(self.int_columns)
         
         self.observation_space = gym.spaces.Box(
-            low=np.zeros(self.n_features, dtype=np.float32),
-            high=np.ones(self.n_features, dtype=np.float32),
+            low=np.full(self.TOTAL_OBS_DIM, -np.inf, dtype=np.float32),
+            high=np.full(self.TOTAL_OBS_DIM, np.inf, dtype=np.float32),
             dtype=np.float32
         )
-        
         self.action_space = gym.spaces.Discrete(2)
         self.current_state = 0
+    
+    def get_state_for_testing(self, index):
+        numerical_state = self.data.iloc[index].values.astype(np.float32)
+        current_text = self.raw_text_data[index]
+        bert_embedding = get_bert_embedding(current_text)
+        state = np.concatenate([numerical_state, bert_embedding])
+        return state
 
     def get_state(self):
-        state = self.data.iloc[self.current_state].values.astype(np.float32)
+        numerical_state = self.data.iloc[self.current_state].values.astype(np.float32)
+        current_text = self.raw_text_data[self.current_state]
+        bert_embedding = get_bert_embedding(current_text)
+        state = np.concatenate([numerical_state, bert_embedding])
         return state
 
     def reset(self, seed=None, options=None):

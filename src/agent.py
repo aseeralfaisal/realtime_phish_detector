@@ -4,7 +4,6 @@ from src.phishing_env import PhishEnv
 from stable_baselines3.common.env_checker import check_env
 import argparse
 from src.model import make_dqn_model
-from stable_baselines3 import DQN
 
 def load_process_data(mode):
     csv_path = f"./data/{mode}_content.csv"
@@ -58,5 +57,5 @@ if __name__ == "__main__":
     mode = args.mode
     verbose = args.verbose
     
-    steps = {"dom": 120_000, "html": 150_000, "url": 4_000}
+    steps = {"url": 206_000, "html": 150_000}
     training_process(timesteps=steps[mode], mode=mode, verbose=verbose, device="cuda")
