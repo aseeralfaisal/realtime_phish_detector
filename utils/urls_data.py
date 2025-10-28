@@ -2003,6 +2003,7 @@
 
 urls = [
     "https://www.google.com",
+    "https://grok.com",
     "https://io-trezorrstart-us.pages.dev",
     "https://acceilfiltres.wixsite.com/my-site",
     "https://aeon.jfdjge.com/syOzBZ"
