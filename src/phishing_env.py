@@ -12,7 +12,7 @@ class PhishEnv(gym.Env):
         self.mode = mode
         self.labels = data["label"].values.astype(np.int32)
         
-        text_col_name = "URL" 
+        text_col_name = "URL"
 
         if text_col_name not in data.columns:
             raise ValueError(f"Required column '{text_col_name}' not found in input data.")
