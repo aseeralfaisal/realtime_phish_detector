@@ -17,6 +17,7 @@ df = pd.read_csv("data/phi+open.csv")
 # df_shuffled.to_csv("data/url_content.csv", index=False)
 
 
-df = pd.read_csv("data/url_content.csv")
-label_counts = df["label"].value_counts()
-print(label_counts)
+df = pd.read_csv("data/html_content.csv")
+df = df.sample(frac=1).reset_index(drop=True)
+df.to_csv("data/html_content_shuffled.csv", index=False)
+print("Shuffled html_content.csv and saved to data/html_content_shuffled.csv")

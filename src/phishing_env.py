@@ -1,6 +1,7 @@
 import gymnasium as gym
 import numpy as np
 from src.bert import get_bert_embedding
+from tqdm import tqdm
 
 BERT_DIM = 768
 
@@ -36,6 +37,10 @@ class PhishEnv(gym.Env):
         self.data = ((self.data - self.feature_min) / (self.feature_max - self.feature_min)).fillna(0).astype(np.float32)
         self.n_features = len(self.int_columns)
         
+        print("Precomputing BERT embeddings...")
+        self.bert_embeddings = np.array([get_bert_embedding(text) for text in tqdm(self.raw_text_data)])
+        print(f"Precomputed {len(self.bert_embeddings)} embeddings (shape: {self.bert_embeddings.shape})")
+        
         self.observation_space = gym.spaces.Box(
             low=np.full(self.TOTAL_OBS_DIM, -np.inf, dtype=np.float32),
             high=np.full(self.TOTAL_OBS_DIM, np.inf, dtype=np.float32),
@@ -46,15 +51,13 @@ class PhishEnv(gym.Env):
     
     def get_state_for_testing(self, index):
         numerical_state = self.data.iloc[index].values.astype(np.float32)
-        current_text = self.raw_text_data[index]
-        bert_embedding = get_bert_embedding(current_text)
+        bert_embedding = self.bert_embeddings[index]
         state = np.concatenate([numerical_state, bert_embedding])
         return state
 
     def get_state(self):
         numerical_state = self.data.iloc[self.current_state].values.astype(np.float32)
-        current_text = self.raw_text_data[self.current_state]
-        bert_embedding = get_bert_embedding(current_text)
+        bert_embedding = self.bert_embeddings[self.current_state]
         state = np.concatenate([numerical_state, bert_embedding])
         return state
 
