@@ -18,7 +18,7 @@ def training_process(timesteps, mode, verbose, device):
     print(f"Training Mode: {mode}\n")
     check_env(env, warn=True)
     
-    model = make_dqn_model(env, dataset_size=len(env.data), verbose=verbose, device=device)
+    model = make_dqn_model(env, dataset_size=len(env.data), verbose=verbose, device=device, double_dqn=True)
     model.learn(total_timesteps=timesteps, progress_bar=True)
 
     total_rewards = 0

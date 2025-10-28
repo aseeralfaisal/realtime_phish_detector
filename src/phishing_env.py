@@ -2,6 +2,7 @@ import gymnasium as gym
 import numpy as np
 from src.bert import get_bert_embedding
 from tqdm import tqdm
+import os
 
 BERT_DIM = 768
 
@@ -9,6 +10,7 @@ class PhishEnv(gym.Env):
     def __init__(self, data, mode="url"):
         super(PhishEnv, self).__init__()
         
+        self.bert_cache_path = f"./data/{mode}bert_embeddings_cache.npy"
         self.mode = mode
         self.labels = data["label"].values.astype(np.int32)
         
@@ -18,7 +20,6 @@ class PhishEnv(gym.Env):
             raise ValueError(f"Required column '{text_col_name}' not found in input data.")
             
         self.raw_text_data = data[text_col_name].values
-        
         columns_to_drop = ["label", "DegitRatioInURL", text_col_name]
         self.data = data.drop(columns=columns_to_drop, errors='ignore')
         
@@ -28,8 +29,8 @@ class PhishEnv(gym.Env):
             self.int_columns = self.data.select_dtypes(include=[np.number]).columns
             
         self.data = self.data[self.int_columns]
-        
         self.n_numerical_features = len(self.int_columns)
+        
         self.TOTAL_OBS_DIM = self.n_numerical_features + BERT_DIM
         
         self.feature_max = self.data.max()
@@ -37,9 +38,16 @@ class PhishEnv(gym.Env):
         self.data = ((self.data - self.feature_min) / (self.feature_max - self.feature_min)).fillna(0).astype(np.float32)
         self.n_features = len(self.int_columns)
         
-        print("Precomputing BERT embeddings...")
-        self.bert_embeddings = np.array([get_bert_embedding(text) for text in tqdm(self.raw_text_data)])
-        print(f"Precomputed {len(self.bert_embeddings)} embeddings (shape: {self.bert_embeddings.shape})")
+        if os.path.exists(self.bert_cache_path):
+            print("Loading Cached BERT Embeddings....")
+            self.bert_embeddings = np.load(self.bert_cache_path)
+        else:
+            print("Precomputing BERT Embeddings....")
+            self.bert_embeddings = np.array([get_bert_embedding(text) for text in tqdm(self.raw_text_data)])
+            os.makedirs(os.path.dirname(self.bert_cache_path), exist_ok=True)
+            np.save(self.bert_cache_path, self.bert_embeddings)
+            print(f"Precomputed {len(self.bert_embeddings)} embeddings (shape: {self.bert_embeddings.shape})")
+            print("Embeddings cached to", self.bert_cache_path)
         
         self.observation_space = gym.spaces.Box(
             low=np.full(self.TOTAL_OBS_DIM, -np.inf, dtype=np.float32),
