@@ -19,7 +19,7 @@ def training_process(timesteps, mode, verbose, device):
     check_env(env, warn=True)
     
     model = make_dqn_model(env, dataset_size=len(env.data), verbose=verbose, device=device)
-    model.learn(total_timesteps=timesteps, progress_bar=True, double_q=True, dueling=True)
+    model.learn(total_timesteps=timesteps, progress_bar=True)
 
     total_rewards = 0
     correct_predictions = 0
